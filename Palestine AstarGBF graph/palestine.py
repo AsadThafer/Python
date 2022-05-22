@@ -1,5 +1,4 @@
 # Asad Thafer Asad
-# Kholoud Yazeed Thabet
 import queue
 import matplotlib.pyplot as plt
 
@@ -65,28 +64,34 @@ def createGraph():
             graph[node_val[1]] = [[node_val[0], node_val[2]]]
 
     return graph
+    return cost
 
 
 # Greedy Best First Search Algorithm
 def GBFS(startNode, heuristics, graph, goalNode="Eilat"):
     priorityQueue = queue.PriorityQueue()
-    priorityQueue.put((heuristics[startNode], startNode))
-
+    distance = 0
     path = []
+
+    priorityQueue.put((heuristics[startNode] , [startNode, 0]))
 
     while priorityQueue.empty() == False:
         current = priorityQueue.get()[1]
-        path.append(current)
+        path.append(current[0])
+        distance += int(current[1])
 
-        if current == goalNode:
+        if current[0] == goalNode:
             break
 
         priorityQueue = queue.PriorityQueue()
 
-        for i in graph[current]:
+        for i in graph[current[0]]:
             if i[0] not in path:
-                priorityQueue.put((heuristics[i[0]], i[0]))
-
+                priorityQueue.put((heuristics[i[0]] , i))
+            
+    
+    global costGBFS
+    costGBFS=distance
     return path
 
 
@@ -111,8 +116,11 @@ def Astar(startNode, heuristics, graph, goalNode="Eilat"):
         for i in graph[current[0]]:
             if i[0] not in path:
                 priorityQueue.put((heuristics[i[0]] + int(i[1]) + distance, i))
-
+    global costAstar
+    costAstar=distance   
     return path
+    
+
 
 
 # drawing map of answer
@@ -171,7 +179,9 @@ def main():
         gbfs = GBFS(cityName, heuristic, graph)
         astar = Astar(cityName, heuristic, graph)
         print("GBFS => ", gbfs)
+        print("Cost GBFS = ",costGBFS)
         print("ASTAR => ", astar)
+        print("Cost ASTAR = ",costAstar)
 
         drawMap(city, gbfs, astar, graph)
 
