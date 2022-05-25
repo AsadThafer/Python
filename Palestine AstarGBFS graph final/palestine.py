@@ -1,5 +1,5 @@
-# Asad Thafer Asad
-# Kholoud Yazeed Thabet
+# Asad Asad
+# Kholoud Thabet
 import queue
 import matplotlib.pyplot as plt
 
