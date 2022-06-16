@@ -16,8 +16,8 @@ def getHeuristics():
 
 # getting cities location from file
 def getCity():
-    city = {}          #cities names with it's coordienates
-    citiesCode = {}     #cities names only
+    city = {}
+    citiesCode = {}
     f = open("cities.txt")
     j = 1
     for i in f.readlines():
@@ -32,7 +32,7 @@ def getCity():
 
 # creating cities graph from file
 def createGraph():
-    graph = {}             #each city with it's neighbours
+    graph = {}
     file = open("citiesGraph.txt")
     for i in file.readlines():
         node_val = i.split()
@@ -63,7 +63,7 @@ def createGraph():
         else:
             graph[node_val[0]] = [[node_val[1], node_val[2]]]
             graph[node_val[1]] = [[node_val[0], node_val[2]]]
-    
+
     return graph
     return cost
 
@@ -99,49 +99,27 @@ def GBFS(startNode, heuristics, graph, goalNode="Eilat"):
 # Astar Algorithm
 def Astar(startNode, heuristics, graph, goalNode="Eilat"):
     priorityQueue = queue.PriorityQueue()
-    priorityQueue.put((heuristics[startNode], startNode))
-    parent = {}
-    dist = {}
-   
-    #parent -> parent[i] -> the node before me in the path from start_node to node i
-    #dist - > dist[i] -> the distance from startnode to node i
-   
-   # i'm parent of me
-    parent[startNode] = startNode
-    # 0 to reach from startNode to startNode 
-    dist[startNode] = 0
-   
-    while priorityQueue.empty() == False:
-       current = priorityQueue.get()[1]
-       if current == goalNode:
-           break
-       for i in graph[current]:         
-           cur_dist = dist[current] + int(i[1])
-           
-           #cur_dist -> distance to reach node i[1] from start node 
-           
-           # if I didn't reach this node before or I have a better distance 
-           if i[0] not in dist or cur_dist < dist[i[0]]:
-               dist[i[0]] = cur_dist
-               parent[i[0]] = current
-               # g = dist[i[0]]
-               # h = heuristics[i[0]]
-               priorityQueue.put((dist[i[0]] + heuristics[i[0]], i[0]))
-   
-    global costAstar
-    costAstar=dist[goalNode]
-
-   
-   #read the path using parent dic, and reverse the path since we take it from the end to start
-   
+    distance = 0
     path = []
-    while goalNode != startNode:
-       path.append(goalNode)
-       goalNode = parent[goalNode]
-    path.append(startNode)
-    path.reverse()
 
-    return path	
+    priorityQueue.put((heuristics[startNode] + distance, [startNode, 0]))
+
+    while priorityQueue.empty() == False:
+        current = priorityQueue.get()[1]
+        path.append(current[0])
+        distance += int(current[1])
+
+        if current[0] == goalNode:
+            break
+
+        priorityQueue = queue.PriorityQueue()
+
+        for i in graph[current[0]]:
+            if i[0] not in path:
+                priorityQueue.put((heuristics[i[0]] + int(i[1]) + distance, i))
+    global costAstar
+    costAstar=distance   
+    return path
     
 
 
@@ -153,8 +131,13 @@ def drawMap(city, gbfs, astar, graph):
     plt.figure(figsize=(6, 16),clear=True,num='Palestine Map Search - By : Asad & Kholoud')
     plt.imshow(img, extent=[0, 2000, 0, 2800])
     for i, j in city.items():
-        plt.plot(j[0], j[1], "ro")
-        plt.annotate(i, (j[0] + 25, j[1]))
+        if i == 'Jericho' or  i == 'Ramallah' :       #this to edit annotate and details for specific cities
+            plt.plot(j[0], j[1], "ro")  
+            plt.annotate(i, (j[0] + 45, j[1]),size=8,weight='bold') #,size=8,color='r', weight='bold'                          #color='r'
+        else :
+            plt.plot(j[0], j[1], "ro")
+            plt.annotate(i, (j[0] + 25, j[1]))
+            
 
         for k in graph[i]:
             n = city[k[0]]
