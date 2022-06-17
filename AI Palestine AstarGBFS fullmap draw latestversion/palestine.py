@@ -65,7 +65,6 @@ def createGraph():
             graph[node_val[1]] = [[node_val[0], node_val[2]]]
 
     return graph
-    return cost
 
 
 # Greedy Best First Search Algorithm
