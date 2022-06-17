@@ -65,6 +65,7 @@ def createGraph():
             graph[node_val[1]] = [[node_val[0], node_val[2]]]
 
     return graph
+    return cost
 
 
 # Greedy Best First Search Algorithm
@@ -96,6 +97,7 @@ def GBFS(startNode, heuristics, graph, goalNode="Eilat"):
 
 
 # Astar Algorithm
+
 def Astar(startNode, heuristics, graph, goalNode="Eilat"):
     priorityQueue = queue.PriorityQueue()
     priorityQueue.put((heuristics[startNode], startNode))
@@ -147,7 +149,7 @@ def Astar(startNode, heuristics, graph, goalNode="Eilat"):
 
 
 # drawing map of answer
-def drawMap(city, gbfs, astar, graph):
+def drawMap(city,gbfs,astar, graph):
     
     img = plt.imread("palestineimage.png")
     plt.figure(figsize=(6, 16),clear=True,num='Palestine Map Search - By : Asad & Kholoud')
@@ -214,7 +216,7 @@ def main():
         print("ASTAR => ", astar)
         print("Cost ASTAR = ",costAstar)
 
-        drawMap(city, gbfs, astar, graph)
+        drawMap(city,gbfs, astar, graph)
 
 
 main()
